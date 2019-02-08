@@ -1,6 +1,7 @@
 ﻿using CustomTenants.CustomAttributes;
 using CustomTenants.Datastores;
 using CustomTenants.Models;
+using CustomTenants.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,7 +27,7 @@ namespace CustomTenants.Controllers
         [HttpGet("users")]
         public IActionResult GetUsers()
         {
-            int tenantId = (int)RouteData.Values.SingleOrDefault(r => r.Key == "tenantId").Value;
+            int tenantId = TenantService.TenantId;
 
             var usersResult = UserDatastore.Current.Users.Where(u => u.ActiveTenantIds.Contains(tenantId));
 

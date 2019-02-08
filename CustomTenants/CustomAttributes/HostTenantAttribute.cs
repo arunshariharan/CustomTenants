@@ -20,11 +20,14 @@ namespace CustomTenants.CustomAttributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var host = context.HttpContext.Request.Host.ToString();
-            int tenantId = TenantService.GetTenantId(host);
+            var tenantHost = context.HttpContext.Request.Host.ToString();
+
+            int tenantId = TenantService.GetCurrentTenantId(tenantHost);
+            TenantService.SetTenantNameAndHost(tenantHost);
 
             context.RouteData.Values.Add("tenantId", tenantId);
-            context.RouteData.Values.Add("tenant", host);
+            context.RouteData.Values.Add("tenant", tenantHost);
+            context.RouteData.Values.Add("tenantName", TenantService.TenantName);
 
             base.OnActionExecuting(context);
         }

@@ -15,7 +15,6 @@ namespace CustomTenants.Controllers
     public class AuthenticationController : Controller
     {
         private ILogger<AuthenticationController> _logger;
-        private string _tenant;
 
         public AuthenticationController(ILogger<AuthenticationController> logger)
         {
