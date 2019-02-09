@@ -29,16 +29,19 @@ namespace CustomTenants.Controllers
         private IUserRepository _repository;
         private IUserMappings _userMappings;
         private IConfiguration _configuration;
+        private ITokenService _tokenService;
 
         public AuthenticationController(ILogger<AuthenticationController> logger, 
             IUserRepository repository, 
             IUserMappings userMappings,
-            IConfiguration configuration )
+            IConfiguration configuration,
+            ITokenService tokenService)
         {
             _logger = logger;
             _repository = repository;
             _userMappings = userMappings;
             _configuration = configuration;
+            _tokenService = tokenService;
         }
 
         [HttpPost("signin")]
@@ -65,22 +68,7 @@ namespace CustomTenants.Controllers
                 bool isValidUser = _repository.ValidatePassword(userCreds, user);
                 if (!isValidUser) return Unauthorized();
 
-                var claims = new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.EmailAddress),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtTokens:secret"]));
-                var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken(
-                    issuer: TenantService.TenantName,
-                    audience: TenantService.TenantHost,
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(15),
-                    signingCredentials: signingCreds
-                    );
+                var token = _tokenService.GenerateNewToken(user);
 
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
 

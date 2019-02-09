@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CustomTenants.Mappings;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
+using CustomTenants.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,7 @@ namespace CustomTenants
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<IUserMappings, UserMappings>();
+            services.AddScoped<ITokenService, JwtTokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
