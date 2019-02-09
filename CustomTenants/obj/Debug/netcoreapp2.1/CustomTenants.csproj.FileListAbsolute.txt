@@ -12,3 +12,16 @@ C:\Users\arun.sivasubramaniya\source\repos\CustomTenants\CustomTenants\obj\Debug
 C:\Users\arun.sivasubramaniya\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.RazorTargetAssemblyInfo.cache
 C:\Users\arun.sivasubramaniya\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.dll
 C:\Users\arun.sivasubramaniya\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.pdb
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\CustomTenants.deps.json
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\CustomTenants.runtimeconfig.json
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\CustomTenants.runtimeconfig.dev.json
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\CustomTenants.dll
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\CustomTenants.pdb
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.csproj.CoreCompileInputs.cache
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.RazorAssemblyInfo.cache
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.RazorAssemblyInfo.cs
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.AssemblyInfoInputs.cache
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.AssemblyInfo.cs
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.RazorTargetAssemblyInfo.cache
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.dll
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.pdb

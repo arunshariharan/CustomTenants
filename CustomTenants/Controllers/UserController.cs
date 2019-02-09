@@ -17,7 +17,6 @@ namespace CustomTenants.Controllers
     {
         private ILogger<UserController> _logger;
         private string currentTenantHost { get; set; }
-        private Tenant _tenant;
 
         public UserController(ILogger<UserController> logger) 
         {
