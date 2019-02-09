@@ -54,6 +54,11 @@ namespace CustomTenants
                     ValidIssuers = TenantService.AllTenantNames
                 };
             });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy("Admin", policy => policy.RequireClaim("Admin", "True"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

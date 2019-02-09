@@ -34,12 +34,18 @@ namespace CustomTenants.Repositories
 
         public void MakeAdmin(User user)
         {
-            user.IsAdmin = true;
+            if (!user.AdminForTenants.Contains(TenantService.TenantId))
+            {
+                user.AdminForTenants.Add(TenantService.TenantId);
+            }
         }
 
         public void RemoveAdmin(User user)
         {
-            user.IsAdmin = false;
+            if (user.AdminForTenants.Contains(TenantService.TenantId))
+            {
+                user.AdminForTenants.Remove(TenantService.TenantId);
+            }
         }
 
         public User CreateUser(User user)
@@ -63,6 +69,6 @@ namespace CustomTenants.Repositories
         {
             return (user.EmailAddress == userCred.EmailAddress && user.Password == userCred.Password);
         }
-
+        
     }
 }

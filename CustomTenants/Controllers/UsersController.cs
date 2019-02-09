@@ -33,6 +33,7 @@ namespace CustomTenants.Controllers
             _userMappings = userMappings;
         }
 
+        
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -53,17 +54,19 @@ namespace CustomTenants.Controllers
             return Ok(mappedUser);
         }
 
-        [HttpPost("{userId}/makeAdmin")]
-        public IActionResult MakeUserAdmin(int userId)
+        [HttpPost("makeAdmin")]
+        [Authorize(Policy = "Admin")]
+        public IActionResult MakeUserAdmin([FromBody] UserContact userContact)
         {
-            var user = _repository.GetUser(userId);
+            var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
             _repository.MakeAdmin(user);
             return Ok();
         }
 
-        [HttpPost("{userId}/removeAdmin")]
+        [HttpPost("removeAdmin")]
+        [Authorize(Policy = "Admin")]
         public IActionResult RemoveUserFromAdmin(int userId)
         {
             var user = _repository.GetUser(userId);

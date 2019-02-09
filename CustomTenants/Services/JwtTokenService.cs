@@ -38,10 +38,14 @@ namespace CustomTenants.Services
 
         private Claim[] GenerateNewClaim(User user)
         {
+            bool isAdmin = user.AdminForTenants.Contains(TenantService.TenantId);
+
             return new[]
                {
                     new Claim(JwtRegisteredClaimNames.Sub, user.EmailAddress),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.GivenName, user.FullName),
+                    new Claim("Admin", isAdmin.ToString())
                 };
         }
     }

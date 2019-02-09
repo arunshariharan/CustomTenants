@@ -21,20 +21,22 @@ namespace CustomTenants.Datastores
                     Id = 1,
                     FullName = "A_User",
                     EmailAddress = "user.a@test.com",
-                    IsAdmin = false,
+                    IsAdmin = true,
                     Password = "12345678",
                     SignedUpTenantId = 1,
-                    ActiveTenantIds = { 1, 2, 3 }
+                    ActiveTenantIds = { 1, 2, 3 },
+                    AdminForTenants = { 1, 2, 3 }
                 },
                 new User()
                 {
                     Id = 2,
                     FullName = "B_User",
                     EmailAddress = "user.b@test.com",
-                    IsAdmin = false,
+                    IsAdmin = true,
                     Password = "12345678",
                     SignedUpTenantId = 2,
-                    ActiveTenantIds = { 1, 2, 3 }
+                    ActiveTenantIds = { 1, 2, 3 },
+                    AdminForTenants = { 2 }
                 },
                 new User()
                 {
