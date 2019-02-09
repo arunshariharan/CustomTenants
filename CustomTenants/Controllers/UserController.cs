@@ -17,78 +17,57 @@ using System.Threading.Tasks;
 namespace CustomTenants.Controllers
 {
     [HostTenant]
-    [Route("api")]
+    [Route("api/users")]
     public class UserController : Controller 
     {
         private ILogger<UserController> _logger;
         private IUserRepository _repository;
+        private IUserMappings _userMappings;
 
-        public UserController(ILogger<UserController> logger, IUserRepository repository) 
+        public UserController(ILogger<UserController> logger, IUserRepository repository, IUserMappings userMappings) 
         {
             _logger = logger;
             _repository = repository;
+            _userMappings = userMappings;
         }
 
-        [HttpGet("users/{userId}", Name = "User At Id")]
+        [HttpGet("{userId}", Name = "User At Id")]
         public IActionResult GetUser(int userId)
         {
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
-            var mappedUser = UserMappings.StripSensitiveDataSingleUser(user);
+            var mappedUser = _userMappings.StripSensitiveDataSingleUser(user);
             return Ok(mappedUser);
         }
 
-        [HttpPost("newUser")]
-        public IActionResult CreateUser([FromBody] User user)
-        {
-            UserValidator validator = new UserValidator();
-            var results = validator.Validate(user);
-
-            var errors = results.ToString("\n");
-
-            if (errors != string.Empty)
-            {
-                var errorList = ErrorFormatter.FormatValidationErrors(errors);
-                return BadRequest(new { Errors = errorList });
-            }
-
-            User newUser = _repository.CreateUser(user);
-
-            var mappedNewUser = UserMappings.StripSensitiveDataSingleUser(newUser);
-            return CreatedAtRoute("User At Id", new { userId = mappedNewUser.Id }, mappedNewUser);
-        }
-
-        [HttpGet("users")]
+        [HttpGet]
         public IActionResult GetUsers()
         {
             var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 
-            var mappedUsers = UserMappings.StripSensitiveDataMultipleUsers(usersResult);
-
+            var mappedUsers = _userMappings.StripSensitiveDataMultipleUsers(usersResult);
             return Ok(mappedUsers);
         }
 
-        [HttpPost("users/{userId}/makeAdmin")]
+        [HttpPost("{userId}/makeAdmin")]
         public IActionResult MakeUserAdmin(int userId)
         {
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
             _repository.MakeAdmin(user);
-
             return Ok();
         }
 
-        [HttpPost("users/{userId}/removeAdmin")]
+        [HttpPost("{userId}/removeAdmin")]
         public IActionResult RemoveUserFromAdmin(int userId)
         {
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
             _repository.RemoveAdmin(user);
-
             return Ok();
         }
     }

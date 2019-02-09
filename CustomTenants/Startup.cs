@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CustomTenants.Mappings;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace CustomTenants
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<IUserMappings, UserMappings>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

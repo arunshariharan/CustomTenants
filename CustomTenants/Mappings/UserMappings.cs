@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace CustomTenants.Mappings
 {
-    public class UserMappings
+    public class UserMappings : IUserMappings
     {
-        public static UserWithoutSensitiveDataDto StripSensitiveDataSingleUser(User user)
+        public UserWithoutSensitiveDataDto StripSensitiveDataSingleUser(User user)
         {
             return Mapper.Map<UserWithoutSensitiveDataDto>(user);
         }
 
-        public static List<UserWithoutSensitiveDataDto> StripSensitiveDataMultipleUsers(IEnumerable<User> users)
+        public List<UserWithoutSensitiveDataDto> StripSensitiveDataMultipleUsers(IEnumerable<User> users)
         {
             var mappedUsers = new List<UserWithoutSensitiveDataDto>();
             foreach (var user in users)
