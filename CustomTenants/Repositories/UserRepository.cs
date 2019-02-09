@@ -74,6 +74,7 @@ namespace CustomTenants.Repositories
             if(user.ActiveTenantIds.Contains(TenantService.TenantId))
             {
                 user.ActiveTenantIds.Remove(TenantService.TenantId);
+                user.DeactivatedOnTenants.Add(TenantService.TenantId);
             }
         }
 
@@ -82,7 +83,20 @@ namespace CustomTenants.Repositories
             if (!user.ActiveTenantIds.Contains(TenantService.TenantId))
             {
                 user.ActiveTenantIds.Add(TenantService.TenantId);
+                user.DeactivatedOnTenants.Remove(TenantService.TenantId);
             }
+        }
+
+        public User GetDeactivatedUser(string emailAddress)
+        {
+            var deactivatedUsersList = GetDeactivatedUsers();
+            return deactivatedUsersList.FirstOrDefault(user => user.EmailAddress == emailAddress);
+        }
+
+        public IEnumerable<User> GetDeactivatedUsers()
+        {
+            int _tenantId = TenantService.TenantId;
+            return UserDatastore.Current.Users.Where(u => u.DeactivatedOnTenants.Contains(_tenantId));
         }
     }
 }

@@ -11,6 +11,7 @@ namespace CustomTenants.Repositories
         IEnumerable<User> GetUsers();
         User GetUser(int userId);
         User GetUser(string emailAddress);
+        User GetDeactivatedUser(string emailAddress);
         void MakeAdmin(User user);
         void RemoveAdmin(User user);
 

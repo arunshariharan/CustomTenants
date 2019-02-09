@@ -16,5 +16,6 @@ namespace CustomTenants.Models
         public List<int> AdminForTenants = new List<int>();
         
         public List<int> ActiveTenantIds = new List<int>();
+        public List<int> DeactivatedOnTenants = new List<int>();
     }
 }

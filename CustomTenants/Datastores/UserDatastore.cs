@@ -24,7 +24,8 @@ namespace CustomTenants.Datastores
                     Password = "12345678",
                     SignedUpTenantId = 1,
                     ActiveTenantIds = { 1, 2, 3 },
-                    AdminForTenants = { 1, 2, 3 }
+                    AdminForTenants = { 1, 2, 3 },
+                    DeactivatedOnTenants = { }
                 },
                 new User()
                 {
@@ -34,7 +35,8 @@ namespace CustomTenants.Datastores
                     Password = "12345678",
                     SignedUpTenantId = 2,
                     ActiveTenantIds = { 1, 2, 3 },
-                    AdminForTenants = { 2 }
+                    AdminForTenants = { 2 },
+                    DeactivatedOnTenants = { }
                 },
                 new User()
                 {
@@ -43,7 +45,8 @@ namespace CustomTenants.Datastores
                     EmailAddress = "user.c@test.com",
                     Password = "12345678",
                     SignedUpTenantId = 3,
-                    ActiveTenantIds = { 1, 2, 3 }
+                    ActiveTenantIds = { 1, 2, 3 },
+                    DeactivatedOnTenants = { }
                 },
                 new User()
                 {
@@ -52,7 +55,8 @@ namespace CustomTenants.Datastores
                     EmailAddress = "user.d@test.com",
                     Password = "12345678",
                     SignedUpTenantId = 1,
-                    ActiveTenantIds = { 2 }
+                    ActiveTenantIds = { 2 },
+                    DeactivatedOnTenants = { }
                 }
             };
         }

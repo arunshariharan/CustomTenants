@@ -97,7 +97,7 @@ namespace CustomTenants.Controllers
             if (user == null) return NotFound();
 
             // if signed in user the same as requesting for deactivate - deny request
-            var signedInUser = User.Claims.FirstOrDefault(u => u.Type == "EmailAddress").Value;
+            var signedInUser = User.Claims.FirstOrDefault(u => u.Type == "Email").Value;
             if (signedInUser == user.EmailAddress)
                 return Unauthorized();
 
@@ -121,7 +121,7 @@ namespace CustomTenants.Controllers
             if (jwtTokenIssuer != TenantService.TenantId.ToString())
                 return Unauthorized();
 
-            var user = _repository.GetUser(userContact.EmailAddress);
+            var user = _repository.GetDeactivatedUser(userContact.EmailAddress);
             if (user == null) return NotFound();
             
             try
