@@ -7,6 +7,7 @@ using CustomTenants.Models;
 using CustomTenants.Repositories;
 using CustomTenants.Services;
 using CustomTenants.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace CustomTenants.Controllers
 {
+    [Authorize]
     [HostTenant]
     [Route("api/users")]
     public class UsersController : Controller 

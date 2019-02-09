@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using CustomTenants.Mappings;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
 using CustomTenants.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CustomTenants
 {
@@ -34,6 +37,23 @@ namespace CustomTenants
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<IUserMappings, UserMappings>();
             services.AddScoped<ITokenService, JwtTokenService>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtTokens:secret"])),
+                    ValidateLifetime = true,
+
+                    ValidateAudience = true,
+                    ValidAudiences = TenantService.AllTenantHosts,
+
+                    ValidateIssuer = true,
+                    ValidIssuers = TenantService.AllTenantNames
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +76,8 @@ namespace CustomTenants
             {
                 cfg.CreateMap<User, UserWithoutSensitiveDataDto>();
             });
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

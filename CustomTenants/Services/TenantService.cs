@@ -16,6 +16,8 @@ namespace CustomTenants.Services
         public static string TenantHost { get; private set; }
 
         public static List<int> AllTenantIds = new List<int>();
+        public static List<string> AllTenantNames = new List<string>();
+        public static List<string> AllTenantHosts = new List<string>();
 
         private readonly static string tenantsFilepath = Startup.Configuration["TenantsFilepath"];
 
@@ -43,7 +45,12 @@ namespace CustomTenants.Services
 
             TenantName = currentTenant["Name"].ToString();
             TenantHost = host;
-            if(AllTenantIds.Count == 0) RetrieveAndSetAllTenantIds(knownTenants);            
+            if (AllTenantIds.Count == 0)
+            {
+                RetrieveAndSetAllTenantIds(knownTenants);
+                RetrieveAndSetAllTenantNames(knownTenants);
+                RetrieveAndSetAllTenantHosts(knownTenants);
+            }
         }
 
         private static void RetrieveAndSetAllTenantIds(JObject knownTenants)
@@ -51,6 +58,22 @@ namespace CustomTenants.Services
             foreach (var tenant in knownTenants["Tenants"])
             {
                 AllTenantIds.Add(Convert.ToInt32(tenant["Id"]));
+            }
+        }
+
+        private static void RetrieveAndSetAllTenantNames(JObject knownTenants)
+        {
+            foreach (var tenant in knownTenants["Tenants"])
+            {
+                AllTenantNames.Add(tenant["Name"].ToString());
+            }
+        }
+
+        private static void RetrieveAndSetAllTenantHosts(JObject knownTenants)
+        {
+            foreach (var tenant in knownTenants["Tenants"])
+            {
+                AllTenantHosts.Add(tenant["Host"].ToString());
             }
         }
 
