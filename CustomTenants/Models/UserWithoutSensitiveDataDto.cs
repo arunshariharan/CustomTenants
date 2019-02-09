@@ -10,5 +10,9 @@ namespace CustomTenants.Models
         public int Id { get; set; }
         public string FullName { get; set; }
         public string EmailAddress { get; set; }
+
+        public List<int> AdminForTenants = new List<int>();
+
+        public List<int> ActiveTenantIds = new List<int>();
     }
 }

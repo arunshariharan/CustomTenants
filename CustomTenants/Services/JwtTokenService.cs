@@ -45,7 +45,8 @@ namespace CustomTenants.Services
                     new Claim(JwtRegisteredClaimNames.Sub, user.EmailAddress),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.GivenName, user.FullName),
-                    new Claim("Admin", isAdmin.ToString())
+                    new Claim("Admin", isAdmin.ToString()),
+                    new Claim("TokenIssuedForCurrentTenant", TenantService.TenantId.ToString())
                 };
         }
     }

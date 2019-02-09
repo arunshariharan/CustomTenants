@@ -37,6 +37,7 @@ namespace CustomTenants.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
+            _logger.LogInformation(User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value.ToString());
             var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 
@@ -58,6 +59,10 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult MakeUserAdmin([FromBody] UserContact userContact)
         {
+            var jwtTokenIssuer = User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value;
+            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+                return Unauthorized();
+
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
@@ -69,6 +74,10 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult RemoveUserFromAdmin(int userId)
         {
+            var jwtTokenIssuer = User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value;
+            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+                return Unauthorized();
+
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 

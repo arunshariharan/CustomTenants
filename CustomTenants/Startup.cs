@@ -37,7 +37,7 @@ namespace CustomTenants
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<IUserMappings, UserMappings>();
             services.AddScoped<ITokenService, JwtTokenService>();
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => 
             {
@@ -48,10 +48,10 @@ namespace CustomTenants
                     ValidateLifetime = true,
 
                     ValidateAudience = true,
-                    ValidAudiences = TenantService.AllTenantHosts,
+                    ValidAudiences = new List<string>() { "localhost:1111", "localhost:2222", "localhost:3333" },
 
                     ValidateIssuer = true,
-                    ValidIssuers = TenantService.AllTenantNames
+                    ValidIssuers = new List<string>() { "Tenant A", "Tenant B", "Tenant C" }
                 };
             });
 
