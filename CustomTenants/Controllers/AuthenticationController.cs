@@ -94,6 +94,11 @@ namespace CustomTenants.Controllers
                 return BadRequest(new { Errors = errorList });
             }
 
+            if(_repository.GetUser(user.EmailAddress) != null)
+            {
+                return BadRequest("Email address already exists. Please sign in");
+            }
+
             User newUser = _repository.CreateUser(user);
 
             var mappedNewUser = _userMappings.StripSensitiveDataSingleUser(newUser);
