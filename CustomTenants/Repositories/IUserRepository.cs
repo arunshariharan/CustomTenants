@@ -17,6 +17,10 @@ namespace CustomTenants.Repositories
         User CreateUser(User user);
 
         bool ValidatePassword(UserCredentials userCred, User user);
-        
+
+        void DeactivateUser(User user);
+        void ActivateUser(User user);
+
+
     }
 }

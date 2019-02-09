@@ -72,17 +72,69 @@ namespace CustomTenants.Controllers
 
         [HttpPost("removeAdmin")]
         [Authorize(Policy = "Admin")]
-        public IActionResult RemoveUserFromAdmin(int userId)
+        public IActionResult RemoveUserFromAdmin([FromBody] UserContact userContact)
         {
             var jwtTokenIssuer = User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value;
             if (jwtTokenIssuer != TenantService.TenantId.ToString())
                 return Unauthorized();
 
-            var user = _repository.GetUser(userId);
+            var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
             _repository.RemoveAdmin(user);
             return Ok();
+        }
+
+        [HttpPost("deactivateUser")]
+        [Authorize(Policy = "Admin")]
+        public IActionResult DeactivateUser([FromBody] UserContact userContact)
+        {
+            var jwtTokenIssuer = User.Claims.FirstOrDefault(u => u.Type == "TokenIssuedForCurrentTenant").Value;
+            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+                return Unauthorized();
+
+            var user = _repository.GetUser(userContact.EmailAddress);
+            if (user == null) return NotFound();
+
+            // if signed in user the same as requesting for deactivate - deny request
+            var signedInUser = User.Claims.FirstOrDefault(u => u.Type == "EmailAddress").Value;
+            if (signedInUser == user.EmailAddress)
+                return Unauthorized();
+
+            try
+            {
+                _repository.DeactivateUser(user);
+                return Ok("Deactivation successfull");
+            } catch(Exception e)
+            {
+                _logger.LogError($"Exception while trying to deactivate user: ${userContact.EmailAddress}");
+            }
+
+            return BadRequest("Unable to perform requested action");
+        }
+
+        [HttpPost("activateUser")]
+        [Authorize(Policy = "Admin")]
+        public IActionResult ActivateUser([FromBody] UserContact userContact)
+        {
+            var jwtTokenIssuer = User.Claims.FirstOrDefault(u => u.Type == "TokenIssuedForCurrentTenant").Value;
+            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+                return Unauthorized();
+
+            var user = _repository.GetUser(userContact.EmailAddress);
+            if (user == null) return NotFound();
+            
+            try
+            {
+                _repository.ActivateUser(user);
+                return Ok("Activation successfull");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception while trying to activate user: ${userContact.EmailAddress}");
+            }
+
+            return BadRequest("Unable to perform requested action");
         }
     }
 }

@@ -68,6 +68,21 @@ namespace CustomTenants.Repositories
         {
             return (user.EmailAddress == userCred.EmailAddress && user.Password == userCred.Password);
         }
-        
+
+        public void DeactivateUser(User user)
+        {
+            if(user.ActiveTenantIds.Contains(TenantService.TenantId))
+            {
+                user.ActiveTenantIds.Remove(TenantService.TenantId);
+            }
+        }
+
+        public void ActivateUser(User user)
+        {
+            if (!user.ActiveTenantIds.Contains(TenantService.TenantId))
+            {
+                user.ActiveTenantIds.Add(TenantService.TenantId);
+            }
+        }
     }
 }
