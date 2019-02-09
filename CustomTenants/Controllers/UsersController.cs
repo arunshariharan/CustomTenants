@@ -31,16 +31,6 @@ namespace CustomTenants.Controllers
             _userMappings = userMappings;
         }
 
-        [HttpGet("{userId}", Name = "User At Id")]
-        public IActionResult GetUser(int userId)
-        {
-            var user = _repository.GetUser(userId);
-            if (user == null) return NotFound();
-
-            var mappedUser = _userMappings.StripSensitiveDataSingleUser(user);
-            return Ok(mappedUser);
-        }
-
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -49,6 +39,16 @@ namespace CustomTenants.Controllers
 
             var mappedUsers = _userMappings.StripSensitiveDataMultipleUsers(usersResult);
             return Ok(mappedUsers);
+        }
+
+        [HttpGet("{userId}", Name = "User At Id")]
+        public IActionResult GetUser(int userId)
+        {
+            var user = _repository.GetUser(userId);
+            if (user == null) return NotFound();
+
+            var mappedUser = _userMappings.StripSensitiveDataSingleUser(user);
+            return Ok(mappedUser);
         }
 
         [HttpPost("{userId}/makeAdmin")]
