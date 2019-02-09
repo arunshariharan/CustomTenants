@@ -10,9 +10,13 @@ namespace CustomTenants.Repositories
     {
         IEnumerable<User> GetUsers();
         User GetUser(int userId);
+        User GetUser(string emailAddress);
         void MakeAdmin(User user);
         void RemoveAdmin(User user);
 
         User CreateUser(User user);
+
+        bool ValidatePassword(UserCredentials userCred, User user);
+        
     }
 }

@@ -3,13 +3,20 @@ using CustomTenants.Formatters;
 using CustomTenants.Mappings;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
+using CustomTenants.Services;
 using CustomTenants.Validations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CustomTenants.Controllers
@@ -21,12 +28,69 @@ namespace CustomTenants.Controllers
         private ILogger<AuthenticationController> _logger;
         private IUserRepository _repository;
         private IUserMappings _userMappings;
+        private IConfiguration _configuration;
 
-        public AuthenticationController(ILogger<AuthenticationController> logger, IUserRepository repository, IUserMappings userMappings)
+        public AuthenticationController(ILogger<AuthenticationController> logger, 
+            IUserRepository repository, 
+            IUserMappings userMappings,
+            IConfiguration configuration )
         {
             _logger = logger;
             _repository = repository;
             _userMappings = userMappings;
+            _configuration = configuration;
+        }
+
+        [HttpPost("signin")]
+        public IActionResult SignInWithToken([FromBody] UserCredentials userCreds)
+        {
+            UserCredentialsValidator validator = new UserCredentialsValidator();
+            var results = validator.Validate(userCreds);
+
+            var errors = results.ToString("\n");
+            if (errors != string.Empty)
+            {
+                var errorList = ErrorFormatter.FormatValidationErrors(errors);
+                return BadRequest(new { Errors = errorList });
+            }
+
+            try
+            {
+                // By default we return only if the user has curretn tenant in active tenants. 
+                // If the user is not active in current tenant, we will return not found
+                User user = _repository.GetUser(userCreds.EmailAddress);
+                if (user == null) return NotFound("User not found or has not access");
+
+
+                bool isValidUser = _repository.ValidatePassword(userCreds, user);
+                if (!isValidUser) return Unauthorized();
+
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.EmailAddress),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtTokens:secret"]));
+                var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: TenantService.TenantName,
+                    audience: TenantService.TenantHost,
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(15),
+                    signingCredentials: signingCreds
+                    );
+
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
+
+            } catch (Exception e)
+            {
+                _logger.LogError($"Could not create JWT. Error: ${e}");
+            }
+
+            return BadRequest("Failed to signin. Coud not generate token");
+
         }
 
         [HttpPost("newUser")]

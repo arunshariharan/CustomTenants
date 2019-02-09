@@ -18,6 +18,14 @@ namespace CustomTenants.Repositories
             return users.FirstOrDefault(u => u.Id == userId);
         }
 
+        public User GetUser(string emailAddress)
+        {
+            var users = GetUsers();
+            if (users == null) return null;
+
+            return users.FirstOrDefault(u => u.EmailAddress == emailAddress);
+        }
+
         public IEnumerable<User> GetUsers()
         {
             int _tenantId = TenantService.TenantId;
@@ -50,5 +58,11 @@ namespace CustomTenants.Repositories
             
             return user;
         }
+
+        public bool ValidatePassword(UserCredentials userCred, User user)
+        {
+            return (user.EmailAddress == userCred.EmailAddress && user.Password == userCred.Password);
+        }
+
     }
 }

@@ -18,13 +18,13 @@ namespace CustomTenants.Controllers
 {
     [HostTenant]
     [Route("api/users")]
-    public class UserController : Controller 
+    public class UsersController : Controller 
     {
-        private ILogger<UserController> _logger;
+        private ILogger<UsersController> _logger;
         private IUserRepository _repository;
         private IUserMappings _userMappings;
 
-        public UserController(ILogger<UserController> logger, IUserRepository repository, IUserMappings userMappings) 
+        public UsersController(ILogger<UsersController> logger, IUserRepository repository, IUserMappings userMappings) 
         {
             _logger = logger;
             _repository = repository;

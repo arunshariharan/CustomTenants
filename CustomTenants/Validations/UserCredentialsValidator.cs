@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace CustomTenants.Validations
 {
-    public class UserCredentialsValidator : AbstractValidator<UserCredentials>
+    public class UserValidator : AbstractValidator<User>
     {
-        public UserCredentialsValidator()
+        public UserValidator()
         {
+            RuleFor(user => user.FullName)
+                .NotEmpty().WithMessage("Name must not be empty")
+                .MaximumLength(30).WithMessage("Name must be less than 30 characters");
+
             RuleFor(user => user.EmailAddress)
                 .NotEmpty().WithMessage("Email address cannot be empty")
                 .EmailAddress().WithMessage("A Valid email address must be provided");
