@@ -24,7 +24,7 @@ namespace CustomTenants.Services
             var currentTenant = GetCurrentTenant(knownTenants, host);
 
             if(currentTenant == null)
-                throw new Exception($"Host with host name ${host} could not be found");
+                throw new Exception($"Current Host: ${host} could not be found");
             
             TenantId = Convert.ToInt32(currentTenant["Id"]);
 

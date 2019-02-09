@@ -1,6 +1,7 @@
 ﻿using CustomTenants.CustomAttributes;
 using CustomTenants.Datastores;
 using CustomTenants.Models;
+using CustomTenants.Repositories;
 using CustomTenants.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,20 +17,18 @@ namespace CustomTenants.Controllers
     public class UserController : Controller 
     {
         private ILogger<UserController> _logger;
-        private string currentTenantHost { get; set; }
+        private IUserRepository _repository;
 
-        public UserController(ILogger<UserController> logger) 
+        public UserController(ILogger<UserController> logger, IUserRepository repository) 
         {
             _logger = logger;
+            _repository = repository;
         }
 
         [HttpGet("users")]
         public IActionResult GetUsers()
         {
-            int tenantId = TenantService.TenantId;
-
-            var usersResult = UserDatastore.Current.Users.Where(u => u.ActiveTenantIds.Contains(tenantId));
-
+            var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 
             return Ok(usersResult);
@@ -38,8 +37,7 @@ namespace CustomTenants.Controllers
         [HttpGet("users/{userId}")]
         public IActionResult GetUser(int userId)
         {
-            var user = UserDatastore.Current.Users.FirstOrDefault(u => u.Id == userId);
-
+            var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
             return Ok(user);
