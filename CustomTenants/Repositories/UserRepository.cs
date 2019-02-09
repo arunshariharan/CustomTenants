@@ -56,7 +56,6 @@ namespace CustomTenants.Repositories
             User lastUser = UserDatastore.Current.Users.LastOrDefault();
 
             user.Id = lastUser.Id + 1;
-            if (!user.IsAdmin) user.IsAdmin = false;
             user.SignedUpTenantId = _tenantId;
             user.ActiveTenantIds = tenantIds;
 

@@ -21,7 +21,6 @@ namespace CustomTenants.Datastores
                     Id = 1,
                     FullName = "A_User",
                     EmailAddress = "user.a@test.com",
-                    IsAdmin = true,
                     Password = "12345678",
                     SignedUpTenantId = 1,
                     ActiveTenantIds = { 1, 2, 3 },
@@ -32,7 +31,6 @@ namespace CustomTenants.Datastores
                     Id = 2,
                     FullName = "B_User",
                     EmailAddress = "user.b@test.com",
-                    IsAdmin = true,
                     Password = "12345678",
                     SignedUpTenantId = 2,
                     ActiveTenantIds = { 1, 2, 3 },
@@ -43,7 +41,6 @@ namespace CustomTenants.Datastores
                     Id = 3,
                     FullName = "C_User",
                     EmailAddress = "user.c@test.com",
-                    IsAdmin = false,
                     Password = "12345678",
                     SignedUpTenantId = 3,
                     ActiveTenantIds = { 1, 2, 3 }
@@ -53,7 +50,6 @@ namespace CustomTenants.Datastores
                     Id = 4,
                     FullName = "D_User",
                     EmailAddress = "user.d@test.com",
-                    IsAdmin = false,
                     Password = "12345678",
                     SignedUpTenantId = 1,
                     ActiveTenantIds = { 2 }

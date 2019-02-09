@@ -12,7 +12,6 @@ namespace CustomTenants.Models
         public string EmailAddress { get; set; }
         public string Password { get; set; }
         public int SignedUpTenantId { get; set; }
-        public bool IsAdmin { get; set; }
 
         public List<int> AdminForTenants = new List<int>();
         
