@@ -23,7 +23,7 @@ namespace CustomTenants.CustomAttributes
             var tenantHost = context.HttpContext.Request.Host.ToString();
 
             int tenantId = TenantService.GetCurrentTenantId(tenantHost);
-            TenantService.SetTenantNameAndHost(tenantHost);
+            TenantService.SetTenantDetails(tenantHost);
 
             context.RouteData.Values.Add("tenantId", tenantId);
             context.RouteData.Values.Add("tenant", tenantHost);

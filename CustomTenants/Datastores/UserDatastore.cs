@@ -19,7 +19,7 @@ namespace CustomTenants.Datastores
                 new User()
                 {
                     Id = 1,
-                    Name = "A_User",
+                    FullName = "A_User",
                     EmailAddress = "user.a@test.com",
                     IsAdmin = false,
                     Password = "12345678",
@@ -29,7 +29,7 @@ namespace CustomTenants.Datastores
                 new User()
                 {
                     Id = 2,
-                    Name = "B_User",
+                    FullName = "B_User",
                     EmailAddress = "user.b@test.com",
                     IsAdmin = false,
                     Password = "12345678",
@@ -39,7 +39,7 @@ namespace CustomTenants.Datastores
                 new User()
                 {
                     Id = 3,
-                    Name = "C_User",
+                    FullName = "C_User",
                     EmailAddress = "user.c@test.com",
                     IsAdmin = false,
                     Password = "12345678",
@@ -49,7 +49,7 @@ namespace CustomTenants.Datastores
                 new User()
                 {
                     Id = 4,
-                    Name = "D_User",
+                    FullName = "D_User",
                     EmailAddress = "user.d@test.com",
                     IsAdmin = false,
                     Password = "12345678",

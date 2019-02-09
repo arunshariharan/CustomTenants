@@ -15,6 +15,8 @@ namespace CustomTenants.Services
         public static string TenantName { get; private set; }
         public static string TenantHost { get; private set; }
 
+        public static List<int> AllTenantIds = new List<int>();
+
         private readonly static string tenantsFilepath = Startup.Configuration["TenantsFilepath"];
 
 
@@ -31,7 +33,7 @@ namespace CustomTenants.Services
             return TenantId;
         }
 
-        public static void SetTenantNameAndHost(string host)
+        public static void SetTenantDetails(string host)
         {
             JObject knownTenants = GetTenants();
             var currentTenant = GetCurrentTenant(knownTenants, host);
@@ -41,6 +43,15 @@ namespace CustomTenants.Services
 
             TenantName = currentTenant["Name"].ToString();
             TenantHost = host;
+            if(AllTenantIds.Count == 0) RetrieveAndSetAllTenantIds(knownTenants);            
+        }
+
+        private static void RetrieveAndSetAllTenantIds(JObject knownTenants)
+        {
+            foreach (var tenant in knownTenants["Tenants"])
+            {
+                AllTenantIds.Add(Convert.ToInt32(tenant["Id"]));
+            }
         }
 
         public static JToken GetCurrentTenant(JObject knownTenants, string host)

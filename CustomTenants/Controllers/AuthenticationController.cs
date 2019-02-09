@@ -1,5 +1,8 @@
 ﻿using CustomTenants.CustomAttributes;
+using CustomTenants.Formatters;
 using CustomTenants.Models;
+using CustomTenants.Repositories;
+using CustomTenants.Validations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,17 +18,12 @@ namespace CustomTenants.Controllers
     public class AuthenticationController : Controller
     {
         private ILogger<AuthenticationController> _logger;
+        private IUserRepository _repository;
 
-        public AuthenticationController(ILogger<AuthenticationController> logger)
+        public AuthenticationController(ILogger<AuthenticationController> logger, IUserRepository repository)
         {
             _logger = logger;
-        }
-
-        [HttpPost("signup")]
-        public IActionResult CreateUser([FromBody] User user)
-        {
-            var tenant = RouteData.Values.SingleOrDefault(r => r.Key == "tenant").ToString();
-            return Ok(tenant);
+            _repository = repository;
         }
     }
 }

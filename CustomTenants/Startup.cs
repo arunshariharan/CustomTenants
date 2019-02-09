@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CustomTenants.Models;
 using CustomTenants.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,6 +47,11 @@ namespace CustomTenants
              
 
             app.UseStatusCodePages();
+
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<User, UserWithoutSensitiveDataDto>();
+            });
 
             app.UseMvc();
         }

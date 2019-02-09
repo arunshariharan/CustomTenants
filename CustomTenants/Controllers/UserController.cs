@@ -1,8 +1,11 @@
-﻿using CustomTenants.CustomAttributes;
+﻿using AutoMapper;
+using CustomTenants.CustomAttributes;
 using CustomTenants.Datastores;
+using CustomTenants.Formatters;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
 using CustomTenants.Services;
+using CustomTenants.Validations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,22 +28,73 @@ namespace CustomTenants.Controllers
             _repository = repository;
         }
 
+        [HttpGet("users/{userId}", Name = "User At Id")]
+        public IActionResult GetUser(int userId)
+        {
+            var user = _repository.GetUser(userId);
+            if (user == null) return NotFound();
+
+            var mappedUser = Mapper.Map<UserWithoutSensitiveDataDto>(user);
+
+            return Ok(mappedUser);
+        }
+
+        [HttpPost("newUser")]
+        public IActionResult CreateUser([FromBody] User user)
+        {
+            UserValidator validator = new UserValidator();
+            var results = validator.Validate(user);
+
+            var errors = results.ToString("\n");
+
+            if (errors != string.Empty)
+            {
+                var errorList = ErrorFormatter.FormatValidationErrors(errors);
+                return BadRequest(new { Errors = errorList });
+            }
+
+            User newUser = _repository.CreateUser(user);
+
+            var mappedNewUser = Mapper.Map<UserWithoutSensitiveDataDto>(newUser);
+
+            return CreatedAtRoute("User At Id", new { userId = mappedNewUser.Id }, mappedNewUser);
+        }
+
         [HttpGet("users")]
         public IActionResult GetUsers()
         {
             var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 
-            return Ok(usersResult);
+            var mappedUsers = new List<UserWithoutSensitiveDataDto>();
+            foreach (var user in usersResult)
+            {
+                mappedUsers.Add(Mapper.Map<UserWithoutSensitiveDataDto>(user));
+            }
+
+            return Ok(mappedUsers);
         }
 
-        [HttpGet("users/{userId}")]
-        public IActionResult GetUser(int userId)
+        [HttpPost("users/{userId}/makeAdmin")]
+        public IActionResult MakeUserAdmin(int userId)
         {
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
-            return Ok(user);
+            _repository.MakeAdmin(user);
+
+            return Ok();
+        }
+
+        [HttpPost("users/{userId}/removeAdmin")]
+        public IActionResult RemoveUserFromAdmin(int userId)
+        {
+            var user = _repository.GetUser(userId);
+            if (user == null) return NotFound();
+
+            _repository.RemoveAdmin(user);
+
+            return Ok();
         }
     }
 }
