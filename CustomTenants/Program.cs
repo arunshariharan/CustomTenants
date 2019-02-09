@@ -19,7 +19,7 @@ namespace CustomTenants
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("https://localhost:1111", "https://localhost:2222", "https://localhost:3333")
+                .UseUrls("https://*:1111", "https://*:2222", "https://*:3333")
                 .UseStartup<Startup>();
     }
 }

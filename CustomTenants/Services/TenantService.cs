@@ -19,9 +19,6 @@ namespace CustomTenants.Services
         public static List<string> AllTenantNames = new List<string>();
         public static List<string> AllTenantHosts = new List<string>();
 
-        private readonly static string tenantsFilepath = Startup.Configuration["TenantsFilepath"];
-
-
         public static int GetCurrentTenantId(string host)
         {
             JObject knownTenants = GetTenants();
@@ -81,7 +78,15 @@ namespace CustomTenants.Services
         {
             foreach (var tenant  in knownTenants["Tenants"])
             {
-                if (tenant["Host"].ToString() == host)
+                //if (tenant["Host"].ToString() == host)
+                //    return tenant;
+
+                Console.WriteLine(tenant);
+                Console.WriteLine(tenant["Host"].ToString());
+                Console.WriteLine(host);
+                
+
+                if (host.Contains(tenant["Host"].ToString()))
                     return tenant;
             }
 
@@ -90,7 +95,7 @@ namespace CustomTenants.Services
 
         public static JObject GetTenants()
         {
-            using (StreamReader reader = new StreamReader(tenantsFilepath))
+            using (StreamReader reader = new StreamReader("Tenants.json"))
             {
                 var tenantsList = reader.ReadToEnd();
                 var tenantsObject = JObject.Parse(tenantsList);

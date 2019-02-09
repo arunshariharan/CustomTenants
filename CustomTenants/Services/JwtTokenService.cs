@@ -22,7 +22,7 @@ namespace CustomTenants.Services
         {
             var claims = GenerateNewClaim(user);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtTokens:secret"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisExtraLogSecret1sForMultiTenantAPIC0d1ngChall3nge"));
             var signingCreds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var token = new JwtSecurityToken(

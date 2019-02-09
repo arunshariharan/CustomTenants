@@ -44,11 +44,10 @@ namespace CustomTenants
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtTokens:secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisExtraLogSecret1sForMultiTenantAPIC0d1ngChall3nge")),
                     ValidateLifetime = true,
 
-                    ValidateAudience = true,
-                    ValidAudiences = new List<string>() { "localhost:1111", "localhost:2222", "localhost:3333" },
+                    ValidateAudience = false,
 
                     ValidateIssuer = true,
                     ValidIssuers = new List<string>() { "Tenant A", "Tenant B", "Tenant C" }

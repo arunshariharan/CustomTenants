@@ -1,17 +1,17 @@
 ﻿{
   "Tenants": [
     {
-      "Host": "localhost:1111",
+      "Host": "1111",
       "Name": "Tenant A",
       "Id": 1
     },
     {
-      "Host": "localhost:2222",
+      "Host": "2222",
       "Name": "Tenant B",
       "Id": 2
     },
     {
-      "Host": "localhost:3333",
+      "Host": "3333",
       "Name": "Tenant C",
       "Id": 3
     }
