@@ -2,6 +2,7 @@
 using CustomTenants.CustomAttributes;
 using CustomTenants.Datastores;
 using CustomTenants.Formatters;
+using CustomTenants.Mappings;
 using CustomTenants.Models;
 using CustomTenants.Repositories;
 using CustomTenants.Services;
@@ -34,8 +35,7 @@ namespace CustomTenants.Controllers
             var user = _repository.GetUser(userId);
             if (user == null) return NotFound();
 
-            var mappedUser = Mapper.Map<UserWithoutSensitiveDataDto>(user);
-
+            var mappedUser = UserMappings.StripSensitiveDataSingleUser(user);
             return Ok(mappedUser);
         }
 
@@ -55,8 +55,7 @@ namespace CustomTenants.Controllers
 
             User newUser = _repository.CreateUser(user);
 
-            var mappedNewUser = Mapper.Map<UserWithoutSensitiveDataDto>(newUser);
-
+            var mappedNewUser = UserMappings.StripSensitiveDataSingleUser(newUser);
             return CreatedAtRoute("User At Id", new { userId = mappedNewUser.Id }, mappedNewUser);
         }
 
@@ -66,11 +65,7 @@ namespace CustomTenants.Controllers
             var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 
-            var mappedUsers = new List<UserWithoutSensitiveDataDto>();
-            foreach (var user in usersResult)
-            {
-                mappedUsers.Add(Mapper.Map<UserWithoutSensitiveDataDto>(user));
-            }
+            var mappedUsers = UserMappings.StripSensitiveDataMultipleUsers(usersResult);
 
             return Ok(mappedUsers);
         }
