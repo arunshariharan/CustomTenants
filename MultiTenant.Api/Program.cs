@@ -19,7 +19,7 @@ namespace MultiTenant
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("https://*:1111", "https://*:2222", "https://*:3333")
+                .UseUrls("https://*:1111", "https://*:2222", "https://*:3333", "https://*:4444")
                 .UseStartup<Startup>();
     }
 }

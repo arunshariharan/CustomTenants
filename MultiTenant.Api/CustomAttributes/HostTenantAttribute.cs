@@ -22,14 +22,21 @@ namespace MultiTenant.CustomAttributes
         {
             var tenantHost = context.HttpContext.Request.Host.ToString();
 
-            int tenantId = TenantService.GetCurrentTenantId(tenantHost);
-            TenantService.SetTenantDetails(tenantHost);
+            try
+            {
+                int tenantId = TenantService.GetCurrentTenantId(tenantHost);
+                TenantService.SetTenantDetails(tenantHost);
 
-            context.RouteData.Values.Add("tenantId", tenantId);
-            context.RouteData.Values.Add("tenant", tenantHost);
-            context.RouteData.Values.Add("tenantName", TenantService.TenantName);
+                context.RouteData.Values.Add("tenantId", tenantId);
+                context.RouteData.Values.Add("tenant", tenantHost);
+                context.RouteData.Values.Add("tenantName", TenantService.TenantName);
 
-            base.OnActionExecuting(context);
+                base.OnActionExecuting(context);
+            } catch(Exception e)
+            {
+                throw new Exception($"Current Host does not have permissions to access this resource. Host: ${tenantHost}. ${e}");                
+            }
+            
         }
 
         

@@ -47,7 +47,6 @@ namespace MultiTenant.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            _logger.LogInformation(User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value.ToString());
             var usersResult = _repository.GetUsers();
             if (usersResult == null) return NotFound();
 

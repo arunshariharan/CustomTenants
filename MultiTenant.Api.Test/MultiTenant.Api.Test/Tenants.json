@@ -1,0 +1,19 @@
+﻿{
+  "Tenants": [
+    {
+      "HostPort": "1111",
+      "Name": "Tenant A",
+      "Id": 1
+    },
+    {
+      "HostPort": "2222",
+      "Name": "Tenant B",
+      "Id": 2
+    },
+    {
+      "HostPort": "3333",
+      "Name": "Tenant C",
+      "Id": 3
+    }
+  ]
+}

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using MultiTenant.Repositories;
 using System.Security.Claims;
 
-namespace MultiTenant.Api.Test
+namespace MultiTenant.Api.Test.Services
 {
     public class TokenManagerShould
     {

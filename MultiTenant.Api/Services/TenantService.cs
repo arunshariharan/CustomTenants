@@ -74,7 +74,7 @@ namespace MultiTenant.Services
             }
         }
 
-        public static JToken GetCurrentTenant(JObject knownTenants, string host)
+        private static JToken GetCurrentTenant(JObject knownTenants, string host)
         {
             foreach (var tenant  in knownTenants["Tenants"])
             {
@@ -85,7 +85,7 @@ namespace MultiTenant.Services
             return null;
         }
 
-        public static JObject GetTenants()
+        private static JObject GetTenants()
         {
             using (StreamReader reader = new StreamReader("Tenants.json"))
             {
