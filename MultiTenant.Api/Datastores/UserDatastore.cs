@@ -54,9 +54,9 @@ namespace MultiTenant.Datastores
                     FullName = "D_User",
                     EmailAddress = "user.d@test.com",
                     Password = "12345678",
-                    SignedUpTenantId = 1,
+                    SignedUpTenantId = 2,
                     ActiveTenantIds = { 2 },
-                    DeactivatedOnTenants = { }
+                    DeactivatedOnTenants = { 1, 3 }
                 }
             };
         }
