@@ -131,16 +131,17 @@ namespace CustomTenants.Controllers
             User currentUser = _repository.GetUser(User.Claims);
             if (currentUser == null) return NotFound("User could not be validated or not found for this operation");
 
-            bool isOldPasswordMatching = _repository.ValidatePassword(updatedPassword.NewPassword, currentUser);
+            bool isOldPasswordMatching = _repository.ValidatePassword(updatedPassword.OldPassword, currentUser);
             if (!isOldPasswordMatching) return BadRequest("The Old password enetered does not match with the user's exisisting password.");
 
             try
             {
                 _repository.UpdatePassword(updatedPassword.NewPassword, currentUser);
+                return Ok("Password updated");
 
             } catch(Exception e)
             {
-                _logger.LogError("Something went wrong while trying to update password. Password not updated.");
+                _logger.LogError($"Something went wrong while trying to update password. Password not updated. ${e}");
             }
 
             return StatusCode(500, "Unable to update Password. Try again later");
