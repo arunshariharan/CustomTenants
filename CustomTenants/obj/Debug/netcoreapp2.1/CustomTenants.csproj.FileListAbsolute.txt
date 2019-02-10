@@ -26,3 +26,4 @@ C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netco
 C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.dll
 C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.pdb
 C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\bin\Debug\netcoreapp2.1\Tenants.json
+C:\Users\arunshariharan\source\repos\CustomTenants\CustomTenants\obj\Debug\netcoreapp2.1\CustomTenants.csprojResolveAssemblyReference.cache

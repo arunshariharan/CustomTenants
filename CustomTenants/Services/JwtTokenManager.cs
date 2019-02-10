@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace CustomTenants.Services
 {
-    public class JwtTokenService : ITokenService
+    public class JwtTokenManager : ITokenManager
     {
         private IConfiguration _configuration;
-        public JwtTokenService(IConfiguration configuration)
+        public JwtTokenManager(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -49,6 +49,15 @@ namespace CustomTenants.Services
                     new Claim("TokenIssuedForCurrentTenant", TenantService.TenantId.ToString()),
                     new Claim("Email", user.EmailAddress)
                 };
+        }
+
+        public bool ValidateClaimHasType(IEnumerable<Claim> claim, string typeToCheck)
+        {
+            var jwtTokenIssuer = claim.FirstOrDefault(u => u.Type == typeToCheck).Value;
+            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+                return false;
+
+            return true;
         }
     }
 }

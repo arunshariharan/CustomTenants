@@ -36,7 +36,7 @@ namespace CustomTenants
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped<IUserMappings, UserMappings>();
-            services.AddScoped<ITokenService, JwtTokenService>();
+            services.AddScoped<ITokenManager, JwtTokenManager>();
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => 

@@ -29,19 +29,19 @@ namespace CustomTenants.Controllers
         private IUserRepository _repository;
         private IUserMappings _userMappings;
         private IConfiguration _configuration;
-        private ITokenService _tokenService;
+        private ITokenManager _tokenManager;
 
         public AuthenticationController(ILogger<AuthenticationController> logger, 
             IUserRepository repository, 
             IUserMappings userMappings,
             IConfiguration configuration,
-            ITokenService tokenService)
+            ITokenManager tokenManager)
         {
             _logger = logger;
             _repository = repository;
             _userMappings = userMappings;
             _configuration = configuration;
-            _tokenService = tokenService;
+            _tokenManager = tokenManager;
         }
 
         [HttpPost("signin")]
@@ -69,7 +69,7 @@ namespace CustomTenants.Controllers
                 bool isValidUser = _repository.ValidatePassword(userCreds, user);
                 if (!isValidUser) return Unauthorized();
 
-                var token = _tokenService.GenerateNewToken(user);
+                var token = _tokenManager.GenerateNewToken(user);
 
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
 

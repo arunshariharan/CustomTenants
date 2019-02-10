@@ -25,12 +25,17 @@ namespace CustomTenants.Controllers
         private ILogger<UsersController> _logger;
         private IUserRepository _repository;
         private IUserMappings _userMappings;
+        private ITokenManager _tokenManager;
 
-        public UsersController(ILogger<UsersController> logger, IUserRepository repository, IUserMappings userMappings) 
+        public UsersController(ILogger<UsersController> logger, 
+            IUserRepository repository, 
+            IUserMappings userMappings,
+            ITokenManager tokenManager) 
         {
             _logger = logger;
             _repository = repository;
             _userMappings = userMappings;
+            _tokenManager = tokenManager;
         }
 
         
@@ -59,8 +64,8 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult MakeUserAdmin([FromBody] UserContact userContact)
         {
-            var jwtTokenIssuer = User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value;
-            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
+            if (!isValidForcurrentTenant)
                 return Unauthorized();
 
             var user = _repository.GetUser(userContact.EmailAddress);
@@ -74,8 +79,8 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult RemoveUserFromAdmin([FromBody] UserContact userContact)
         {
-            var jwtTokenIssuer = User.Claims.FirstOrDefault(a => a.Type == "TokenIssuedForCurrentTenant").Value;
-            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
+            if (!isValidForcurrentTenant)
                 return Unauthorized();
 
             var user = _repository.GetUser(userContact.EmailAddress);
@@ -89,8 +94,8 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult DeactivateUser([FromBody] UserContact userContact)
         {
-            var jwtTokenIssuer = User.Claims.FirstOrDefault(u => u.Type == "TokenIssuedForCurrentTenant").Value;
-            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
+            if (!isValidForcurrentTenant)
                 return Unauthorized();
 
             var user = _repository.GetUser(userContact.EmailAddress);
@@ -117,8 +122,8 @@ namespace CustomTenants.Controllers
         [Authorize(Policy = "Admin")]
         public IActionResult ActivateUser([FromBody] UserContact userContact)
         {
-            var jwtTokenIssuer = User.Claims.FirstOrDefault(u => u.Type == "TokenIssuedForCurrentTenant").Value;
-            if (jwtTokenIssuer != TenantService.TenantId.ToString())
+            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
+            if (!isValidForcurrentTenant)
                 return Unauthorized();
 
             var user = _repository.GetDeactivatedUser(userContact.EmailAddress);
