@@ -129,6 +129,10 @@ namespace MultiTenant.Controllers
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
+            var signedInUser = User.Claims.FirstOrDefault(u => u.Type == "Email").Value;
+            if (signedInUser == user.EmailAddress)
+                return Unauthorized();
+
             try
             {
                 _repository.RemoveAdmin(user);
