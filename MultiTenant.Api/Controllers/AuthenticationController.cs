@@ -57,7 +57,6 @@ namespace MultiTenant.Controllers
         [HttpPost("signin")]
         public IActionResult SignInWithToken([FromBody] UserCredentials userCreds)
         {
-            _logger.LogInformation(userCreds.EmailAddress);
             UserCredentialsValidator validator = new UserCredentialsValidator();
             var results = validator.Validate(userCreds);
 
