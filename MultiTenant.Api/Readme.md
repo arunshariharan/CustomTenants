@@ -2,7 +2,7 @@
 
 ## Implementation of Tenants in this API:
 ----------------------------------------
-The multi-tenancy concept has been implemented by identifying the **host** making curretn request.
+The multi-tenancy concept has been implemented by identifying the **host** making current request.
 For the purposes of running it locally and on docker, the differentiation of tenants is based on **Port number**. Thre are 3 port numbers exposed and identified by the app - 1111, 2222 and 3333
 
 To access Tenant A, hit `https://localhost:1111/swagger`(local) / `https://192.168.99.100:1111/swagger`(docker)
@@ -15,12 +15,16 @@ To access Tenant C, hit `https://localhost:3333/swagger`(local) / `https://192.1
 ---------------------
 ### Docker:
 * Navigate to https://hub.docker.com/r/arunshariharan/multitenant_api
-* Copy the docker pull command or paste `docker pull arunshariharan/multitenant_api:<LATEST_TAG>`.
-* Make sure you got the latest image (check the tags)
+* Copy the docker pull command or paste `docker pull arunshariharan/multitenant_api:final_release`.
+
+```powershell
+Make sure you got the latest image (check the tags). It could be different to the one mentioned above.
+```
+
 * Once downloaded, run the app using following command:
 
 ```powershell
-docker run -p 1111:1111 -p 2222:2222 -p 3333:3333 arunshariharan/multitenant_api:<LATEST_TAG>
+docker run -p 1111:1111 -p 2222:2222 -p 3333:3333 arunshariharan/multitenant_api:final_release
 ```
 
 * Once the app is up and running, you need to get the current IP address of your docker machine. This can be achieved by typing in `docker-machine ip` in a powershell. This is usually `192.168.99.100`
@@ -38,7 +42,10 @@ docker run -p 1111:1111 -p 2222:2222 -p 3333:3333 arunshariharan/multitenant_api
 
 ## How to use the API
 ---------------------
-This API employs *Token based authentication*. Hence every endpoint apart from `/api/signin` and `/api/newUser` requires a valid token to access.
+##### This API employs *Token based authentication*. Hence every endpoint apart from `/api/signin` and `/api/newUser` requires a valid token to access.
+
+
+
 First step would be is to **create a new user** according to swagger details, after which you can hit **Signin** endpoint and get a token.
 
 
