@@ -70,7 +70,7 @@ namespace CustomTenants.Services
         {
             foreach (var tenant in knownTenants["Tenants"])
             {
-                AllTenantHosts.Add(tenant["Host"].ToString());
+                AllTenantHosts.Add(tenant["HostPort"].ToString());
             }
         }
 
@@ -78,15 +78,7 @@ namespace CustomTenants.Services
         {
             foreach (var tenant  in knownTenants["Tenants"])
             {
-                //if (tenant["Host"].ToString() == host)
-                //    return tenant;
-
-                Console.WriteLine(tenant);
-                Console.WriteLine(tenant["Host"].ToString());
-                Console.WriteLine(host);
-                
-
-                if (host.Contains(tenant["Host"].ToString()))
+                if (host.Contains(tenant["HostPort"].ToString()))
                     return tenant;
             }
 
