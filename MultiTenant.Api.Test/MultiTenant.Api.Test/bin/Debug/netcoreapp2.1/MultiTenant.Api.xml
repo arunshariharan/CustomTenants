@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MultiTenant.Api</name>
+    </assembly>
+    <members>
+        <member name="M:MultiTenant.Controllers.AuthenticationController.SignInWithToken(MultiTenant.Models.UserCredentials)">
+            <summary></summary>
+            <param name="userCreds"> Takes in email and password</param>
+            <returns></returns>
+            <response code="200">Returns JWT Token + Expiry that needs to be attached with every other request for 
+            Authentication and Authorization</response>
+            <response code="400">The payload is malformed</response>
+            <response code="404">Provided email address is not found in DB</response>
+            <response code="401">Email / Password do not match</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.AuthenticationController.CreateUser(MultiTenant.Models.User)">
+            <summary></summary>
+            <param name="user">Must contain FullName, email and password at the minimum</param>
+            <returns></returns>
+            <response code="201">Returns the new user details in body and location in header</response>
+            <response code="400">Email already exists / Malformed payload</response>
+            <response code="500">Unable to create new user in DB</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.AuthenticationController.UpdatePassword(MultiTenant.Models.PasswordUpdate)">
+            <summary></summary>
+            <param name="updatedPassword">Takes in Old password and new password</param>
+            <returns></returns>
+            <response code="200">Password successfully updated</response>
+            <response code="400">The payload is malformed</response>
+            <response code="404">Logged in user details could not be verified</response>
+            <response code="401">Not authorized to perform this operation. User not signed in</response>
+            <response code="500">Unable to update password</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.GetUsers">
+            <summary>Returns all registered user in this Tenant. 
+            Change to different tenant in swagger URL to get different results</summary>
+            <remarks>Must be signed in to access this endpoint</remarks>
+            <response code="200">List of all Users active in this tenant</response>
+            <response code="401">User not signed in to perform this request</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.GetUser(System.Int32)">
+            <summary>
+            Get a user on particular Id
+            </summary>
+            <param name="userId">Integer</param>
+            <remarks>Must be signed in to access this endpoint</remarks>
+            <response code="200">List of all Users active in this tenant</response>
+            <response code="401">User not signed in to perform this request</response>
+            <response code="404">User not found with given ID</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.MakeUserAdmin(MultiTenant.Models.UserContact)">
+            <summary>
+            Make a user in current Tenant as an admin
+            </summary>
+            <param name="userContact">Currently takes in only email address</param>
+            <response code="401">User not signed in to perform this request. 
+            Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+            <response code="403">User does not have admin privileges to perform this action</response>
+            <response code="404">User with supplied contact cannot be found in db</response>
+            <response code="200">Success</response>
+            <response code="500">Error while writing to data store</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.RemoveUserFromAdmin(MultiTenant.Models.UserContact)">
+            <summary>
+            Remove admin privilege for a user in current tenant
+            </summary>
+            <param name="userContact">Currently takes in only email address</param>
+            <response code="401">User not signed in to perform this request. 
+            Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+            <response code="403">User does not have admin privileges to perform this action</response>
+            <response code="404">User with supplied contact cannot be found in db</response>
+            <response code="200">Success</response>
+            <response code="500">Error while writing to data store</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.DeactivateUser(MultiTenant.Models.UserContact)">
+            <summary>
+            Deactivate a user from curretn tenant. The user can access other Tenants though.
+            </summary>
+            <param name="userContact">Currently takes in only email address</param>
+            <response code="401">User not signed in to perform this request. 
+            Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+            <response code="403">User does not have admin privileges to perform this action</response>
+            <response code="404">User with supplied contact cannot be found in db</response>
+            <response code="200">Successfully deactivated user</response>
+            <response code="500">Error while writing to data store</response>
+        </member>
+        <member name="M:MultiTenant.Controllers.UsersController.ActivateUser(MultiTenant.Models.UserContact)">
+            <summary>
+            Activate a user on current tenant. The user must be currently deactivated in current tenant.
+            </summary>
+            <param name="userContact">Currently takes in only email address</param>
+            <response code="401">User not signed in to perform this request. 
+            Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+            <response code="403">User does not have admin privileges to perform this action</response>
+            <response code="404">User with supplied contact cannot be found in db</response>
+            <response code="200">Successfully activated user</response>
+            <response code="500">Error while writing to data store</response>
+        </member>
+    </members>
+</doc>

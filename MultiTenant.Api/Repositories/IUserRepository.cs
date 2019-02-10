@@ -25,6 +25,7 @@ namespace MultiTenant.Repositories
         void DeactivateUser(User user);
         void ActivateUser(User user);
         void UpdatePassword(string passwordToUpdated, User user);
+        bool IsAdmin(User user);
 
 
     }

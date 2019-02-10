@@ -8,16 +8,20 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MultiTenant.Repositories;
 
 namespace MultiTenant.Services
 {
     public class JwtTokenManager : ITokenManager
     {
         private IConfiguration _configuration;
-        public JwtTokenManager(IConfiguration configuration)
+        private IUserRepository _repository;
+        public JwtTokenManager(IConfiguration configuration, IUserRepository repository)
         {
             _configuration = configuration;
+            _repository = repository;
         }
+
         public JwtSecurityToken GenerateNewToken(User user)
         {
             var claims = GenerateNewClaim(user);
@@ -38,7 +42,7 @@ namespace MultiTenant.Services
 
         private Claim[] GenerateNewClaim(User user)
         {
-            bool isAdmin = user.AdminForTenants.Contains(TenantService.TenantId);
+            bool isAdmin = _repository.IsAdmin(user);
 
             return new[]
                {

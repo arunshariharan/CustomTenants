@@ -11,9 +11,9 @@ namespace MultiTenant.Services
 {
     public class TenantService
     {
-        public static int TenantId { get; private set; }
-        public static string TenantName { get; private set; }
-        public static string TenantHost { get; private set; }
+        public static int TenantId { get; set; }
+        public static string TenantName { get; set; }
+        public static string TenantHost { get; set; }
 
         public static List<int> AllTenantIds = new List<int>();
         public static List<string> AllTenantNames = new List<string>();

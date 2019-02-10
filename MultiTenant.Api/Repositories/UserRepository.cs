@@ -116,5 +116,10 @@ namespace MultiTenant.Repositories
         {
             user.Password = passwordToUpdated;
         }
+
+        public bool IsAdmin(User user)
+        {
+            return user.AdminForTenants.Contains(TenantService.TenantId);
+        }
     }
 }
