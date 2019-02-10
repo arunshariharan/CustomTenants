@@ -54,10 +54,10 @@ namespace CustomTenants.Services
         public bool ValidateClaimHasType(IEnumerable<Claim> claim, string typeToCheck)
         {
             var jwtTokenIssuer = claim.FirstOrDefault(u => u.Type == typeToCheck).Value;
-            if (jwtTokenIssuer != TenantService.TenantId.ToString())
-                return false;
+            if (typeToCheck == "TokenIssuedForCurrentTenant")
+                return (jwtTokenIssuer == TenantService.TenantId.ToString());            
 
-            return true;
+            return false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CustomTenants.Datastores;
 using CustomTenants.Models;
@@ -69,6 +70,11 @@ namespace CustomTenants.Repositories
             return (user.EmailAddress == userCred.EmailAddress && user.Password == userCred.Password);
         }
 
+        public bool ValidatePassword(string passwordToValidate, User user)
+        {
+            return (user.Password == passwordToValidate);
+        }
+
         public void DeactivateUser(User user)
         {
             if(user.ActiveTenantIds.Contains(TenantService.TenantId))
@@ -97,6 +103,18 @@ namespace CustomTenants.Repositories
         {
             int _tenantId = TenantService.TenantId;
             return UserDatastore.Current.Users.Where(u => u.DeactivatedOnTenants.Contains(_tenantId));
+        }
+
+        public User GetUser(IEnumerable<Claim> claim)
+        {
+            var claimEmailAddress = claim.FirstOrDefault(c => c.Type == "Email").Value.ToString();
+            var user = GetUser(claimEmailAddress);
+            return user;
+        }
+
+        public void UpdatePassword(string passwordToUpdated, User user)
+        {
+            user.Password = passwordToUpdated;
         }
     }
 }

@@ -112,7 +112,7 @@ namespace CustomTenants.Controllers
                 return Ok("Deactivation successfull");
             } catch(Exception e)
             {
-                _logger.LogError($"Exception while trying to deactivate user: ${userContact.EmailAddress}");
+                _logger.LogError($"Exception while trying to deactivate user: ${userContact.EmailAddress}. Exception: ${e}");
             }
 
             return BadRequest("Unable to perform requested action");

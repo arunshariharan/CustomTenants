@@ -5,6 +5,7 @@ using CustomTenants.Models;
 using CustomTenants.Repositories;
 using CustomTenants.Services;
 using CustomTenants.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -100,10 +101,49 @@ namespace CustomTenants.Controllers
                 return BadRequest("Email address already exists. Please sign in");
             }
 
-            User newUser = _repository.CreateUser(user);
+            try
+            {
+                User newUser = _repository.CreateUser(user);
+                var mappedNewUser = _userMappings.StripSensitiveDataSingleUser(newUser);
+                return CreatedAtRoute("User At Id", new { userId = mappedNewUser.Id }, mappedNewUser);
+            } catch(Exception e)
+            {
+                _logger.LogError($"Something went wrong while trying to create user. ${e}");
+            }
 
-            var mappedNewUser = _userMappings.StripSensitiveDataSingleUser(newUser);
-            return CreatedAtRoute("User At Id", new { userId = mappedNewUser.Id }, mappedNewUser);
+            return StatusCode(500, "Unable to create new user. Try again later");            
+        }
+
+        [Authorize]
+        [HttpPost("updatePassword")]
+        public IActionResult UpdatePassword([FromBody] PasswordUpdate updatedPassword)
+        {
+            PasswordUpdateValidator validator = new PasswordUpdateValidator();
+            var results = validator.Validate(updatedPassword);
+
+            var errors = results.ToString("\n");
+            if (errors != string.Empty)
+            {
+                var errorList = ErrorFormatter.FormatValidationErrors(errors);
+                return BadRequest(new { Errors = errorList });
+            }
+
+            User currentUser = _repository.GetUser(User.Claims);
+            if (currentUser == null) return NotFound("User could not be validated or not found for this operation");
+
+            bool isOldPasswordMatching = _repository.ValidatePassword(updatedPassword.NewPassword, currentUser);
+            if (!isOldPasswordMatching) return BadRequest("The Old password enetered does not match with the user's exisisting password.");
+
+            try
+            {
+                _repository.UpdatePassword(updatedPassword.NewPassword, currentUser);
+
+            } catch(Exception e)
+            {
+                _logger.LogError("Something went wrong while trying to update password. Password not updated.");
+            }
+
+            return StatusCode(500, "Unable to update Password. Try again later");
         }
     }
 }
