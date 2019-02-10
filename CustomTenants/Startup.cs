@@ -68,6 +68,21 @@ namespace CustomTenants
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
+
+                var token = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
+
+                config.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "Token authentication / authorization. Example: Bearer <token>",
+                    In = "header",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
+
+                config.AddSecurityRequirement(token);
             });
         }
 
