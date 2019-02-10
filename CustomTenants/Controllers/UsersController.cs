@@ -38,6 +38,11 @@ namespace CustomTenants.Controllers
             _tokenManager = tokenManager;
         }
 
+        /// <summary>Returns all registered user in this Tenant. 
+        /// Change to different tenant in swagger URL to get different results</summary>
+        /// <remarks>Must be signed in to access this endpoint</remarks>
+        /// <response code="200">List of all Users active in this tenant</response>
+        /// <response code="401">User not signed in to perform this request</response>
         
         [HttpGet]
         public IActionResult GetUsers()
@@ -50,6 +55,15 @@ namespace CustomTenants.Controllers
             return Ok(mappedUsers);
         }
 
+        /// <summary>
+        /// Get a user on particular Id
+        /// </summary>
+        /// <param name="userId">Integer</param>
+        /// <remarks>Must be signed in to access this endpoint</remarks>
+        /// <response code="200">List of all Users active in this tenant</response>
+        /// <response code="401">User not signed in to perform this request</response>
+        /// <response code="404">User not found with given ID</response>
+        
         [HttpGet("{userId}", Name = "User At Id")]
         public IActionResult GetUser(int userId)
         {
@@ -59,6 +73,17 @@ namespace CustomTenants.Controllers
             var mappedUser = _userMappings.StripSensitiveDataSingleUser(user);
             return Ok(mappedUser);
         }
+
+        /// <summary>
+        /// Make a user in current Tenant as an admin
+        /// </summary>
+        /// <param name="userContact">Currently takes in only email address</param>
+        /// <response code="401">User not signed in to perform this request. 
+        /// Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+        /// <response code="403">User does not have admin privileges to perform this action</response>
+        /// <response code="404">User with supplied contact cannot be found in db</response>
+        /// <response code="200">Success</response>
+        /// <response code="500">Error while writing to data store</response>
 
         [HttpPost("makeAdmin")]
         [Authorize(Policy = "Admin")]
@@ -71,10 +96,29 @@ namespace CustomTenants.Controllers
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
-            _repository.MakeAdmin(user);
-            return Ok();
+            try
+            {
+                _repository.MakeAdmin(user);
+                return Ok();
+            } catch (Exception e)
+            {
+                _logger.LogError($"Error occured while trynig to make user Admin. ${e}");
+            }
+
+            return StatusCode(500, "Something went wrong while trying to make user an admin.");
         }
 
+        /// <summary>
+        /// Remove admin privilege for a user in current tenant
+        /// </summary>
+        /// <param name="userContact">Currently takes in only email address</param>
+        /// <response code="401">User not signed in to perform this request. 
+        /// Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+        /// <response code="403">User does not have admin privileges to perform this action</response>
+        /// <response code="404">User with supplied contact cannot be found in db</response>
+        /// <response code="200">Success</response>
+        /// <response code="500">Error while writing to data store</response>
+        
         [HttpPost("removeAdmin")]
         [Authorize(Policy = "Admin")]
         public IActionResult RemoveUserFromAdmin([FromBody] UserContact userContact)
@@ -86,9 +130,28 @@ namespace CustomTenants.Controllers
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
-            _repository.RemoveAdmin(user);
-            return Ok();
+            try
+            {
+                _repository.RemoveAdmin(user);
+                return Ok();
+            } catch (Exception e)
+            {
+                _logger.LogError($"Error occured while trynig to make user Admin. ${e}");
+            }
+
+            return StatusCode(500, "Something went wrong while trying to make user an admin.");
         }
+
+        /// <summary>
+        /// Deactivate a user from curretn tenant. The user can access other Tenants though.
+        /// </summary>
+        /// <param name="userContact">Currently takes in only email address</param>
+        /// <response code="401">User not signed in to perform this request. 
+        /// Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+        /// <response code="403">User does not have admin privileges to perform this action</response>
+        /// <response code="404">User with supplied contact cannot be found in db</response>
+        /// <response code="200">Successfully deactivated user</response>
+        /// <response code="500">Error while writing to data store</response>
 
         [HttpPost("deactivateUser")]
         [Authorize(Policy = "Admin")]
@@ -118,6 +181,17 @@ namespace CustomTenants.Controllers
             return BadRequest("Unable to perform requested action");
         }
 
+        /// <summary>
+        /// Activate a user on current tenant. The user must be currently deactivated in current tenant.
+        /// </summary>
+        /// <param name="userContact">Currently takes in only email address</param>
+        /// <response code="401">User not signed in to perform this request. 
+        /// Or the User is not signed into the current tenant. User must obtain a token from current tenant to perform this operation</response>
+        /// <response code="403">User does not have admin privileges to perform this action</response>
+        /// <response code="404">User with supplied contact cannot be found in db</response>
+        /// <response code="200">Successfully activated user</response>
+        /// <response code="500">Error while writing to data store</response>
+        
         [HttpPost("activateUser")]
         [Authorize(Policy = "Admin")]
         public IActionResult ActivateUser([FromBody] UserContact userContact)

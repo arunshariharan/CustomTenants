@@ -45,6 +45,15 @@ namespace CustomTenants.Controllers
             _tokenManager = tokenManager;
         }
 
+        /// <summary></summary>
+        /// <param name="userCreds"> Takes in email and password</param>
+        /// <returns></returns>
+        /// <response code="200">Returns JWT Token + Expiry that needs to be attached with every other request for 
+        /// Authentication and Authorization</response>
+        /// <response code="400">The payload is malformed</response>
+        /// <response code="404">Provided email address is not found in DB</response>
+        /// <response code="401">Email / Password do not match</response>
+
         [HttpPost("signin")]
         public IActionResult SignInWithToken([FromBody] UserCredentials userCreds)
         {
@@ -83,6 +92,13 @@ namespace CustomTenants.Controllers
 
         }
 
+        /// <summary></summary>
+        /// <param name="user">Must contain FullName, email and password at the minimum</param>
+        /// <returns></returns>
+        /// <response code="201">Returns the new user details in body and location in header</response>
+        /// <response code="400">Email already exists / Malformed payload</response>
+        /// <response code="500">Unable to create new user in DB</response>
+        
         [HttpPost("newUser")]
         public IActionResult CreateUser([FromBody] User user)
         {
@@ -113,6 +129,16 @@ namespace CustomTenants.Controllers
 
             return StatusCode(500, "Unable to create new user. Try again later");            
         }
+
+
+        /// <summary></summary>
+        /// <param name="updatedPassword">Takes in Old password and new password</param>
+        /// <returns></returns>
+        /// <response code="200">Password successfully updated</response>
+        /// <response code="400">The payload is malformed</response>
+        /// <response code="404">Logged in user details could not be verified</response>
+        /// <response code="401">Not authorized to perform this operation. User not signed in</response>
+        /// <response code="500">Unable to update password</response>
 
         [Authorize]
         [HttpPost("updatePassword")]
