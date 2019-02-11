@@ -3,3 +3,5 @@
 .vs/
 MultiTenant.Api/bin
 MultiTenant.Api/obj
+MultiTenant.Api.Test/MultiTenant.Api.Test/obj
+MultiTenant.Api.Test/MultiTenant.Api.Test/bin
