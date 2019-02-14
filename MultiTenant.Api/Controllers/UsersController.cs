@@ -86,8 +86,8 @@ namespace MultiTenant.Controllers
         /// <response code="500">Error while writing to data store</response>
 
         [HttpPost("makeAdmin")]
+        [Claims("TokenIssuedForCurrentTenant")]
         [Authorize(Policy = "Admin")]
-        [Claims("TokenIssuedForCurrentTenant"]
         public IActionResult MakeUserAdmin([FromBody] UserContact userContact)
         {
             var user = _repository.GetUser(userContact.EmailAddress);
@@ -117,13 +117,10 @@ namespace MultiTenant.Controllers
         /// <response code="500">Error while writing to data store</response>
         
         [HttpPost("removeAdmin")]
+        [Claims("TokenIssuedForCurrentTenant")]
         [Authorize(Policy = "Admin")]
         public IActionResult RemoveUserFromAdmin([FromBody] UserContact userContact)
         {
-            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
-            if (!isValidForcurrentTenant)
-                return Unauthorized();
-
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
@@ -155,8 +152,8 @@ namespace MultiTenant.Controllers
         /// <response code="500">Error while writing to data store</response>
 
         [HttpPost("deactivateUser")]
-        [Authorize(Policy = "Admin")]
         [Claims("TokenIssuedForCurrentTenant")]
+        [Authorize(Policy = "Admin")]
         public IActionResult DeactivateUser([FromBody] UserContact userContact)
         {
             var user = _repository.GetUser(userContact.EmailAddress);
@@ -191,8 +188,8 @@ namespace MultiTenant.Controllers
         /// <response code="500">Error while writing to data store</response>
         
         [HttpPost("activateUser")]
-        [Authorize(Policy = "Admin")]
         [Claims("TokenIssuedForCurrentTenant")]
+        [Authorize(Policy = "Admin")]
         public IActionResult ActivateUser([FromBody] UserContact userContact)
         {
             var user = _repository.GetDeactivatedUser(userContact.EmailAddress);

@@ -30,24 +30,25 @@ namespace MultiTenant.Api.CustomAttributes
         {
 
             var tenantHost = context.HttpContext.Request.Host.ToString();
+            var claimType = context.HttpContext.User.Claims.FirstOrDefault(u => u.Type == _type).Value;
 
             try
             {
-                int tenantId = TenantService.GetCurrentTenantId(tenantHost);
-                TenantService.SetTenantDetails(tenantHost);
+                if(TenantService.TenantId == 0)
+                {
+                    int tenantId = TenantService.GetCurrentTenantId(tenantHost);
+                    TenantService.SetTenantDetails(tenantHost);
 
-                if (!context.RouteData.Values.Any(a => a.Key == "tenantId"))
                     context.RouteData.Values.Add("tenantId", tenantId);
-                if (!context.RouteData.Values.Any(a => a.Key == "tenant"))
                     context.RouteData.Values.Add("tenant", tenantHost);
-                if (!context.RouteData.Values.Any(a => a.Key == "tenantName"))
                     context.RouteData.Values.Add("tenantName", TenantService.TenantName);
+                }
 
-                var claimType = context.HttpContext.User.Claims.FirstOrDefault(u => u.Type == _type).Value;
-                if(claimType != TenantService.TenantId.ToString())
+                if (claimType != TenantService.TenantId.ToString())
                 {
                     context.Result = new ForbidResult();
                 }
+
             }
             catch (Exception e)
             {
