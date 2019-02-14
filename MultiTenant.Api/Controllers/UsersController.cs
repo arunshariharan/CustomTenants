@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MultiTenant.Api.CustomAttributes;
 
 namespace MultiTenant.Controllers
 {
@@ -86,12 +87,9 @@ namespace MultiTenant.Controllers
 
         [HttpPost("makeAdmin")]
         [Authorize(Policy = "Admin")]
+        [Claims("TokenIssuedForCurrentTenant"]
         public IActionResult MakeUserAdmin([FromBody] UserContact userContact)
         {
-            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
-            if (!isValidForcurrentTenant)
-                return Unauthorized();
-
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
@@ -158,12 +156,9 @@ namespace MultiTenant.Controllers
 
         [HttpPost("deactivateUser")]
         [Authorize(Policy = "Admin")]
+        [Claims("TokenIssuedForCurrentTenant")]
         public IActionResult DeactivateUser([FromBody] UserContact userContact)
         {
-            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
-            if (!isValidForcurrentTenant)
-                return Unauthorized();
-
             var user = _repository.GetUser(userContact.EmailAddress);
             if (user == null) return NotFound();
 
@@ -197,12 +192,9 @@ namespace MultiTenant.Controllers
         
         [HttpPost("activateUser")]
         [Authorize(Policy = "Admin")]
+        [Claims("TokenIssuedForCurrentTenant")]
         public IActionResult ActivateUser([FromBody] UserContact userContact)
         {
-            var isValidForcurrentTenant = _tokenManager.ValidateClaimHasType(User.Claims, "TokenIssuedForCurrentTenant");
-            if (!isValidForcurrentTenant)
-                return Unauthorized();
-
             var user = _repository.GetDeactivatedUser(userContact.EmailAddress);
             if (user == null) return NotFound();
             
